@@ -29,7 +29,12 @@ class Item(Base):
     on_offer = Column(Boolean, default=False)
 
 
-Base.metadata.create_all(bind=engine)
+@app.on_event("startup")
+def startup():
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Warning: Could not create tables: {e}")
 
 
 class ItemCreate(BaseModel):
